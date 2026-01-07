@@ -1,0 +1,4 @@
+class_overrides:
+  GetNextripStopidStreetResponse200:
+    class_name: StreetStopResponse
+    module_name: street_stop_response

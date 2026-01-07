@@ -1,0 +1,25 @@
+[tools]
+uv = "latest"
+
+[tasks.ruff-fix]
+description = "Apply lint fixes with Ruff"
+run = "uv run ruff check . --fix-only"
+wait_for = ["gen-nextrip"]
+
+[tasks.ruff-format]
+description = "Apply formatting with Ruff"
+run = "uv run ruff format"
+wait_for = ["gen-nextrip", "ruff-fix"]
+
+[tasks.ruff]
+description = "Run all automated Ruff fixes"
+depends = ["ruff-fix", "ruff-format"]
+
+[tasks.gen-nextrip]
+description = "Generate the NexTrip SDK from the official OpenAPI spec"
+run = "uv run openapi-python-client generate --url https://svc.metrotransit.org/swagger/docs/v2/nextrip --config generator-configs/nextrip.yaml --meta=none --output-path=src/metrotransit --overwrite"
+
+[tasks.build]
+description = "Generate all SDKs from their official OpenAPI specs"
+depends = ["gen-nextrip"]
+depends_post = ["ruff"]
