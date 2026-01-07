@@ -36,3 +36,6 @@ Every path/method combo in the official spec is represented as a Python module w
   - `sync_detailed`: Blocking request that always returns a `Request`, optionally with `parsed` set if the request was successful.
   - `asyncio`: Like `sync` but async instead of blocking
   - `asyncio_detailed`: Like `sync_detailed` but async instead of blocking
+
+[github]: https://github.com/bsoyka/metrotransit-sdk
+[pypi]: https://pypi.org/project/metrotransit/
