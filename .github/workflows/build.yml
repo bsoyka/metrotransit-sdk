@@ -3,6 +3,9 @@ name: SDK building
 on:
   push:
     branches: [ main ]
+  schedule:
+    # Every day at 14:00 UTC
+    - cron: '0 14 * * *'
   workflow_dispatch:
 
 permissions: { }
