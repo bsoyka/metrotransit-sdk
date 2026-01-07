@@ -1,0 +1,58 @@
+name: Version bumping
+
+on:
+  workflow_dispatch:
+    inputs:
+      level:
+        type: choice
+        description: Level of bump
+        options:
+          - major
+          - minor
+          - patch
+          - stable
+          - alpha
+          - beta
+          - rc
+          - post
+          - dev
+
+permissions: { }
+
+jobs:
+  bump:
+    name: Bump version number
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          persist-credentials: true
+
+      - name: Set up mise
+        uses: jdx/mise-action@146a28175021df8ca24f8ee1828cc2a60f980bd5 # v3.5.1
+
+      - name: Get old version
+        id: old_version
+        run: |
+          version="$(uv version --short)"
+          echo "old_version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Bump version
+        run: uv version --bump ${{inputs.level}}
+
+      - name: Get new version
+        id: new_version
+        run: |
+          version="$(uv version --short)"
+          echo "new_version=$version" >> "$GITHUB_OUTPUT"
+
+      - uses: EndBug/add-and-commit@a94899bca583c204427a224a7af87c02f9b325d5 # v9.1.4
+        with:
+          message: 'chore: bump ${{steps.old_version.outputs.old_version}} → ${{steps.new_version.outputs.new_version}}'
+          tag: 'v${{steps.new_version.outputs.new_version}}'
